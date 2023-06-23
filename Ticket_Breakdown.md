@@ -17,86 +17,68 @@ You will be graded on the level of detail in each ticket, the clarity of the exe
 
 ## Your Breakdown Here
 
-# Ticket 1: Update Agent information to support custom IDs
+# Ticket 1: Update Agent IDs in Reports
 
 Description:
-Currently, we only have internal database IDs for Agents. However, we want to allow Facilities to save their own custom IDs for each Agent. This ticket involves updating the Agent model and the database structure to accommodate the custom IDs.
+Currently, the reports generated for client Facilities contain the internal database IDs of the Agents. The goal is to allow Facilities to save their own custom IDs for each Agent and use those IDs in the generated reports. This ticket involves updating the report generation process to use custom IDs instead of internal database IDs.
 
-Acceptance criteria:
-- The Agent model is modified to include a field for custom IDs.
-- The database structure is updated to support the new custom ID field.
-- Existing Agent data is migrated to include the custom ID field, if applicable.
-- Facilities can add and update custom IDs for Agents through the application interface.
+Acceptance Criteria:
+1. Facilities can save custom IDs for Agents in their profile.
+2. When generating reports, the custom ID of each Agent is used instead of the internal database ID.
+3. The custom IDs are retrieved from the Facility's profile and mapped to the corresponding Agents.
+4. The PDF report contains the correct custom IDs for each Agent.
 
-Effort estimate: 4 hours
+Implementation Details:
+1. Add a new field for custom ID in the Facility table in the database.
+2. Modify the UI to allow Facilities to enter and save custom IDs for their Agents.
+3. Modify the `generateReport` function to retrieve the custom IDs of the Agents assigned to each Shift.
+4. Update the PDF generation code to include the custom IDs in the report.
 
-Implementation details:
-1. Review the current Agent model and database structure.
-2. Add a field for custom IDs in the Agent model.
-3. Modify the database schema to include the custom ID field.
-4. Create a migration script to update existing Agent records with the custom ID field.
-5. Implement changes in the application interface to allow Facilities to manage custom IDs for Agents.
+Estimated Effort: 4 hours
 
-# Ticket 2: Include custom Agent IDs in Shift retrieval
-
-Description:
-When retrieving Shifts for a Facility, we need to include the custom IDs associated with each Agent. Currently, the retrieval function doesn't fetch this information. This ticket involves updating the function to fetch Shifts along with their corresponding custom Agent IDs, if available.
-
-Acceptance criteria:
-- The retrieval function fetches Shifts including the custom Agent IDs, if provided.
-- The function gracefully handles cases where custom Agent IDs are not available.
-
-Effort estimate: 2 hours
-
-Implementation details:
-1. Review the existing Shift retrieval function's code.
-2. Modify the function to fetch Shifts along with the custom Agent IDs, if available.
-3. Implement error handling to handle scenarios where custom Agent IDs are not provided.
-
-# Ticket 3: Update report generation with custom Agent IDs
+# Ticket 2: Update Shifts Metadata Retrieval
 
 Description:
-Currently, our report generation process uses the internal database IDs of Agents. We need to modify it to utilize the custom Agent IDs provided by Facilities when generating reports.
+Currently, when retrieving the Shifts for generating reports, the function `getShiftsByFacility` only returns basic metadata about the assigned Agents. To include custom IDs in the reports, the function needs to be updated to retrieve the custom ID for each Agent as well.
 
-Acceptance criteria:
-- The report generation process is updated to use custom Agent IDs instead of internal database IDs.
+Acceptance Criteria:
+1. The `getShiftsByFacility` function retrieves the custom ID of each assigned Agent along with other metadata.
+2. The retrieved Shifts data includes the custom IDs of the Agents.
 
-Effort estimate: 2 hours
+Implementation Details:
+1. Update the database query in the `getShiftsByFacility` function to join the Agents table and retrieve the custom ID field.
+2. Modify the data structure returned by `getShiftsByFacility` to include the custom ID field.
 
-Implementation details:
-1. Review the code for the report generation process.
-2. Modify the code to incorporate the custom Agent IDs provided by Facilities.
-3. Ensure the updated process consistently and accurately generates reports with custom Agent IDs.
+Estimated Effort: 2 hours
 
-# Ticket 4: Include custom Agent IDs in report submission
-
-Description:
-Our current report submission process does not include the custom Agent IDs. To improve compliance, we need to enhance the process to include the custom Agent IDs along with other required information.
-
-Acceptance criteria:
-- The report submission process is updated to include the custom Agent IDs in the submitted reports.
-- The submitted reports contain all necessary information for compliance.
-
-Effort estimate: 3 hours
-
-Implementation details:
-1. Identify the components involved in the report submission process.
-2. Modify the relevant components to include the custom Agent IDs in the submitted reports.
-3. Validate the submitted reports to ensure they contain all the required compliance information.
-
-Note: Additional implementation considerations may arise depending on the existing application architecture and report generation process.
-
-# Ticket 5 (Optional): Display custom Agent IDs in report formatting
+# Ticket 3: Update Report Generation Code
 
 Description:
-Currently, our generated reports may not explicitly display the custom Agent IDs. To enhance clarity, we can update the report formatting to include the custom Agent IDs as a visible identifier.
+The report generation code needs to be modified to include the custom IDs of the Agents in the generated PDF reports. Currently, it uses the internal database IDs of the Agents, but it should be updated to use the custom IDs instead.
 
-Acceptance criteria:
-- The report formatting is updated to display the custom Agent IDs alongside the Agent's name or other relevant information.
-- The custom Agent IDs are presented clearly and legibly in the reports.
+Acceptance Criteria:
+1. The `generateReport` function retrieves the custom ID of each Agent from the Shifts data.
+2. The custom IDs are used in the report generation process instead of the internal database IDs.
+3. The PDF report contains the correct custom IDs for each Agent.
 
-Effort estimate: 2 hours
+Implementation Details:
+1. Modify the `generateReport` function to extract the custom ID field from the Shifts data.
+2. Update the report template to include the custom IDs in the appropriate sections.
+3. Generate the PDF report with the updated custom IDs.
 
-Implementation details:
-1. Review the existing report formatting code or template.
-2. Modify the report formatting to include a section or column displaying
+Estimated Effort: 3 hours
+
+# Ticket 4: Update Shifts API Endpoint
+
+Description:
+The API endpoint responsible for retrieving Shifts for generating reports needs to be updated to include the custom IDs of the Agents. Currently, it returns the basic metadata without the custom IDs. This ticket involves modifying the API endpoint to include the custom IDs in the response.
+
+Acceptance Criteria:
+1. The API endpoint for retrieving Shifts returns the custom ID of each assigned Agent along with other metadata.
+2. The custom IDs are included in the Shifts response.
+
+Implementation Details:
+1. Update the API endpoint handler to retrieve the custom ID field from the database.
+2. Modify the response payload to include the custom IDs.
+
+Estimated Effort: 2 hours
